@@ -5,6 +5,23 @@ class Vhs < ActiveRecord::Base
     
     after_initialize :add_serial_number
 
+    def number_of_rentals
+        self.rentals.count
+    end
+
+    def self.most_used
+        most_used_array = self.all.sort_by{|vhs| vhs.number_of_rentals}.reverse[0..2]
+        most_used_array.each{|vhs| puts "serial number: #{vhs.serial_number} | title: #{vhs.movie.title}"}
+    end
+
+    def self.all_movies
+        self.all.map{|vhs| vhs.movie}.to_set
+    end
+
+    def self.all_genres
+        movie_list = self.all_movies
+        movie_list.map{|movie| movie.genres}
+    end
 
     private
 
